@@ -3,4 +3,8 @@ name = "rust-comp-geo"
 version = "0.1.0"
 edition = "2021"
 
+[lib] # Allows test folder to access logic src folder.
+name = "rust_comp_geo"  # underscores instead of hyphens for the library name
+path = "src/lib.rs"     # points to your library entry point
+
 [dependencies]
