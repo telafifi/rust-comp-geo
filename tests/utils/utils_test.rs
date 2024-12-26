@@ -1,4 +1,4 @@
-use rust_comp_geo::utils::utils::{close_equal, round};
+use rust_comp_geo::utils::utils::{close_equal, round, round_to_n_decimals};
 
 #[cfg(test)] // Only compiles when running tests
 mod close_equal_test {
@@ -53,6 +53,26 @@ mod close_equal_test {
         let rounded = round(x);
         let eq = close_equal(x, rounded, None);
         assert!(eq);
+    }
+  }
+
+  #[test]
+  fn round_to_n_decimals_equality_test() {
+    let test_cases: Vec<(f64, u32, bool)> = vec![
+        (4.815162342, 2, false),
+        (9.999999, 8, true),
+        (2.0, 4, true),
+        (-7.0, 1, true),
+        (12345.6789, 1, false),
+        (0.0, 7, true),
+        (-0.00000001, 8, true),
+    ];
+
+    for (x, n, expected) in test_cases {
+        let rounded = round(x);
+        let rounded_n = round_to_n_decimals(x, n);
+        let result = close_equal(rounded, rounded_n, None);
+        assert_eq!(result, expected);
     }
   }
 
