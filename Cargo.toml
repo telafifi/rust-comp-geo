@@ -8,3 +8,5 @@ name = "rust_comp_geo"  # underscores instead of hyphens for the library name
 path = "src/lib.rs"     # points to your library entry point
 
 [dependencies]
+serde = { version = "1.0.216", features = ["derive"] }
+serde_json = "1.0.134"

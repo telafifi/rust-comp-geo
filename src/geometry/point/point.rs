@@ -17,6 +17,14 @@ pub fn p2p_angle(p1: XY, p2: XY) -> f64 {
   correct_angle_signs(delta_y.atan2(delta_x))
 }
 
+pub fn angle_to_point(p2: XY) -> impl Fn(XY) -> f64 {
+  move |p1| p2p_angle(p1, p2)
+}
+
+pub fn angle_from_point(p1: XY) -> impl Fn(XY) -> f64 {
+  move |p2| p2p_angle(p1, p2)
+}
+
 /**
  * Create a new point translated by the offset X and Y values provided.
  */
