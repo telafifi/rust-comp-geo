@@ -26,7 +26,7 @@ pub struct Vector3D {
     pub k: f64,
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize)]
+#[derive(Clone, Copy, Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 
 pub enum StrokeType {
