@@ -42,3 +42,27 @@ pub struct StrokeBase {
     #[serde(rename="type")]
     pub stroke_type: StrokeType
 }
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
+#[serde(tag = "type", rename = "segment")]
+pub struct Segment {
+    pub p1: XY,
+    pub p2: XY,
+}
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
+#[serde(tag = "type", rename = "arc")]
+pub struct Arc {
+    pub p1: XY,
+    pub p2: XY,
+    pub center: XY,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub major: Option<bool>,
+}
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum Stroke {
+    Segment(Segment),
+    Arc(Arc),
+}
