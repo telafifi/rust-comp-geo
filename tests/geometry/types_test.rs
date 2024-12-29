@@ -66,5 +66,51 @@ use super::*;
     assert_eq!(serialized_minor, r#"{"type":"arc","p1":{"x":0.0,"y":0.0},"p2":{"x":1.0,"y":1.0},"center":{"x":0.5,"y":0.5}}"#);
   }
 
-  // NEED TO ADD DESERIALIZATION TESTS AND THEN REMOVE BASE WORK
+  #[test]
+  fn test_deserialize_segment() {
+    let serialized: &str = r#"{"type":"segment","p1":{"x":0.0,"y":0.0},"p2":{"x":1.0,"y":1.0}}"#;
+    let deserialized: Stroke = serde_json::from_str(serialized).unwrap();
+    match deserialized {
+      Stroke::Segment(segment) => {
+        assert_eq!(segment.p1.x, 0.0);
+        assert_eq!(segment.p1.y, 0.0);
+        assert_eq!(segment.p2.x, 1.0);
+        assert_eq!(segment.p2.y, 1.0);
+      },
+      _ => panic!("Expected segment")
+    }
+  }
+
+  #[test]
+  fn test_deserialize_arc() {
+    let serialized_major: &str = r#"{"type":"arc","p1":{"x":0.0,"y":0.0},"p2":{"x":1.0,"y":1.0},"center":{"x":0.5,"y":0.5},"major":true}"#;
+    let deserialized_major: Stroke = serde_json::from_str(serialized_major).unwrap();
+    match deserialized_major {
+      Stroke::Arc(arc) => {
+        assert_eq!(arc.p1.x, 0.0);
+        assert_eq!(arc.p1.y, 0.0);
+        assert_eq!(arc.p2.x, 1.0);
+        assert_eq!(arc.p2.y, 1.0);
+        assert_eq!(arc.center.x, 0.5);
+        assert_eq!(arc.center.y, 0.5);
+        assert_eq!(arc.major, Some(true));
+      },
+      _ => panic!("Expected arc")
+    }
+
+    let serialized_minor: &str = r#"{"type":"arc","p1":{"x":0.0,"y":0.0},"p2":{"x":1.0,"y":1.0},"center":{"x":0.5,"y":0.5}}"#;
+    let deserialized_minor: Stroke = serde_json::from_str(serialized_minor).unwrap();
+    match deserialized_minor {
+      Stroke::Arc(arc) => {
+        assert_eq!(arc.p1.x, 0.0);
+        assert_eq!(arc.p1.y, 0.0);
+        assert_eq!(arc.p2.x, 1.0);
+        assert_eq!(arc.p2.y, 1.0);
+        assert_eq!(arc.center.x, 0.5);
+        assert_eq!(arc.center.y, 0.5);
+        assert_eq!(arc.major, None);
+      },
+      _ => panic!("Expected arc")
+    }
+  }
 }
