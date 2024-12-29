@@ -1,4 +1,5 @@
-use rust_comp_geo::geometry::types::{Arc, Segment, Stroke, StrokeBase, StrokeType, XY};
+use serde::{Serialize, Deserialize};
+use rust_comp_geo::geometry::types::{Arc, AnnotatedStroke, Segment, Stroke, StrokeBase, StrokeType, XY};
 
 #[cfg(test)]
 mod type_tests {
@@ -111,6 +112,61 @@ use super::*;
         assert_eq!(arc.major, None);
       },
       _ => panic!("Expected arc")
+    }
+  }
+
+  #[test]
+  fn test_serialize_annotated_stroke() {
+    #[derive(Clone, Serialize, Deserialize, Debug)]
+    struct StrokeData {
+      pub name: String,
+      pub value: f64
+    }
+    
+    let annotated_stroke: AnnotatedStroke<StrokeData> = AnnotatedStroke {
+      stroke: Stroke::Arc(Arc {
+        p1: XY { x: 0.0, y: 0.0 },
+        p2: XY { x: 1.0, y: 1.0 },
+        center: XY { x: 0.5, y: 0.5 },
+        major: Some(true)
+      }),
+      data: StrokeData {
+        name: "strokeName".to_string(),
+        value: 3.0,
+      }
+    };
+
+    let serialized: String = serde_json::to_string(&annotated_stroke).unwrap();
+    assert_eq!(serialized, r#"{"type":"arc","p1":{"x":0.0,"y":0.0},"p2":{"x":1.0,"y":1.0},"center":{"x":0.5,"y":0.5},"major":true,"data":{"name":"strokeName","value":3.0}}"#);
+  }
+
+  #[test]
+  fn test_deserialize_annotated_stroke() {
+    #[derive(Clone, Serialize, Deserialize, Debug)]
+    struct StrokeData {
+      pub name: String,
+      pub value: f64
+    }
+
+    let serialized: &str = r#"{"type":"arc","p1":{"x":0.0,"y":0.0},"p2":{"x":1.0,"y":1.0},"center":{"x":0.5,"y":0.5},"major":true,"data":{"name":"strokeName","value":3.0}}"#;
+    let deserialized: AnnotatedStroke<StrokeData> = serde_json::from_str(serialized).unwrap();
+    match deserialized {
+      AnnotatedStroke { stroke, data } => {
+        match stroke {
+          Stroke::Arc(arc) => {
+            assert_eq!(arc.p1.x, 0.0);
+            assert_eq!(arc.p1.y, 0.0);
+            assert_eq!(arc.p2.x, 1.0);
+            assert_eq!(arc.p2.y, 1.0);
+            assert_eq!(arc.center.x, 0.5);
+            assert_eq!(arc.center.y, 0.5);
+            assert_eq!(arc.major, Some(true));
+          },
+          _ => panic!("Expected arc")
+        }
+        assert_eq!(data.name, "strokeName");
+        assert_eq!(data.value, 3.0);
+      }
     }
   }
 }

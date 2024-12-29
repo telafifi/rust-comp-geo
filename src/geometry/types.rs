@@ -68,3 +68,10 @@ pub enum Stroke {
     #[serde(rename = "arc")]
     Arc(Arc),
 }
+
+#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
+pub struct AnnotatedStroke<T> {
+    #[serde(flatten)]
+    pub stroke: Stroke,
+    pub data: T,
+}
