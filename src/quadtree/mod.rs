@@ -1,3 +1,3 @@
-pub mod geometry;
+pub mod types;
 pub mod utils;
 pub mod quadtree;
