@@ -62,6 +62,8 @@ fn setup() -> Quadtree<QuadtreePoint<String>, String> {
     assert!(quadtree.nodes[Quadrant::TopLeft as usize].objects.contains(&object2));
     assert!(quadtree.nodes[Quadrant::BottomLeft as usize].objects.contains(&object1));
     assert!(quadtree.nodes[Quadrant::BottomRight as usize].objects.contains(&object3));
+
+    quadtree.clear();
   }
 
   #[test]
@@ -91,5 +93,46 @@ fn setup() -> Quadtree<QuadtreePoint<String>, String> {
     let result2 = quadtree.search(&circle2, 0.0);
     assert_eq!(result2.len(), 1);
     assert!(result2.contains(&&object1));
+
+    quadtree.clear();
+  }
+
+  #[test]
+  fn test_should_retrieve_objects_that_collide_with_geometry_with_nonzero_tolerance() {
+    let mut quadtree = setup();
+
+    let within_tolerance = QuadtreePoint::new(XY { x: 51.0, y: 51.0 }, "within_tolerance".to_string());
+    let outside_tolerance = QuadtreePoint::new(XY { x: 52.0, y: 52.0 }, "outside_tolerance".to_string());
+
+    let object1: QuadtreePoint<String> = QuadtreePoint::new(XY { x: 25.0, y: 25.0 }, "object1".to_string());
+    let object2: QuadtreePoint<String> = QuadtreePoint::new(XY { x: 25.0, y: 75.0 }, "object2".to_string());
+    let object3: QuadtreePoint<String> = QuadtreePoint::new(XY { x: 75.0, y: 25.0 }, "object3".to_string());
+    
+    quadtree.insert(&object1);
+    quadtree.insert(&object2);
+    quadtree.insert(&object3);
+
+    let result1 = quadtree.search(&within_tolerance, 1.25);
+    assert_eq!(result1.len(), 3);
+    assert!(result1.contains(&&object1));
+    assert!(result1.contains(&&object2));
+    assert!(result1.contains(&&object3));
+
+    let result2 = quadtree.search(&outside_tolerance, 1.25);
+    assert!(result2.is_empty());
+
+
+    quadtree.clear();
+  }
+
+  #[test]
+  fn test_clear_quadtree() {
+    let mut quadtree = setup();
+
+    let object: QuadtreePoint<String> = QuadtreePoint::new(XY { x: 50.0, y: 50.0 }, "data".to_string());
+    quadtree.insert(&object);
+    quadtree.clear();
+    assert_eq!(quadtree.objects.len(), 0);
+    assert_eq!(quadtree.nodes.len(), 0);
   }
 }
