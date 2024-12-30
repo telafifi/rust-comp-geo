@@ -22,9 +22,9 @@ pub trait QuadTreeObject<T> {
  * the bottom left quadrant and goes clockwise.
  */
 pub enum Quadrant {
-  BottomLeft,
-  TopLeft,
-  TopRight,
-  BottomRight,
+  BottomLeft = 0,
+  TopLeft = 1,
+  TopRight = 2,
+  BottomRight = 3,
 }
 

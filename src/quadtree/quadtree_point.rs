@@ -8,6 +8,7 @@ pub fn point_in_node(point: &XY, node: &NodeGeometry) -> bool {
 /**
  * Represents a 2D point in a quadtree.
  */
+#[derive(Debug, Clone, Hash, Eq, PartialEq)]
 pub struct QuadtreePoint<U> {
   pub point: XY,
   pub data: U,

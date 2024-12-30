@@ -84,29 +84,34 @@ where T: QuadTreeObject<U> + Hash + Eq {
       },
     ];
 
-    for (i, bound) in bounds.iter().enumerate() {
-      self.nodes[i] = Quadtree::new(QuadtreeProps {
-        bounds: *bound,
-        max_objects: self.max_objects,
-        max_levels: self.max_levels,
-      }, level);
-    }
+    self.nodes = bounds.iter()
+    .map(|bound| {
+        Quadtree::new(
+            QuadtreeProps {
+                bounds: *bound,
+                max_objects: self.max_objects,
+                max_levels: self.max_levels,
+            },
+            level
+        )
+    })
+    .collect();
 
   }
 
-  pub fn insert(&mut self, obj: T) -> &mut Self {
+  pub fn insert(&mut self, obj: &T) -> &mut Self {
     // If we have sub-nodes, call insert on matching subnodes.
     if !self.nodes.is_empty() {
       for node in &mut self.nodes {
           if obj.in_node(&node.bounds) {
-              node.insert(obj.clone());
+              node.insert(obj);
           }
       }
       return self;
   }
 
     // Otherwise, store the object in this node.
-    self.objects.push(obj);
+    self.objects.push(obj.clone());
 
     // If we have too many objects in this node, and we haven't
     // reached the maximum depth, split the node.
@@ -117,7 +122,7 @@ where T: QuadTreeObject<U> + Hash + Eq {
       for obj in self.objects.iter() {
         for node in self.nodes.iter_mut() {
           if obj.in_node(&node.bounds) {
-            node.insert(obj.clone());
+            node.insert(obj);
           }
         }
       }
