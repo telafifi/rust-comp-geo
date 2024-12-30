@@ -98,3 +98,9 @@ pub struct AnnotatedStroke<T> {
     pub stroke: Stroke,
     pub data: T,
 }
+
+#[derive(Clone, Copy, Debug)]
+pub struct Circle {
+    pub center: XY,
+    pub radius: f64,
+}
