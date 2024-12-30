@@ -1,7 +1,7 @@
 /**
  * Interface for geometry of a Quadtree node.
  */
-#[derive(Default)]
+#[derive(Default, Copy, Clone)]
 pub struct NodeGeometry {
   pub x_min: f64,
   pub x_max: f64,
@@ -12,16 +12,9 @@ pub struct NodeGeometry {
 /**
  * Interface for objects that can be stored in a quadtree.
  */
-pub struct QuadTreeObject<U> {
-  /**
-   * Arbitrary data associated with the object.
-   */
-  pub data: U,
-
-  /**
-   * Check if the object is within a node.
-   */
-  pub in_node: fn(node: &NodeGeometry) -> bool,
+pub trait QuadTreeObject<T> {
+  fn get_data(&self) -> &T;
+  fn in_node(&self, node: &NodeGeometry) -> bool;
 }
 
 /**
