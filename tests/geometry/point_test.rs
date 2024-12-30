@@ -1,6 +1,15 @@
-use rust_comp_geo::geometry::point::point::{create_point, p2p_dist, translate_point};
-use rust_comp_geo::geometry::types::XY;
+use rust_comp_geo::geometry::point::point::{
+  bounding_box_from_points, 
+  create_point, 
+  p2p_angle, 
+  p2p_dist, 
+  points_equal, 
+  point_equals, 
+  translate_point
+};
+use rust_comp_geo::geometry::types::{ BoundingBox, XY };
 use rust_comp_geo::utils::utils::close_equal;
+use std::f64::consts::PI;
 
 #[cfg(test)] // Only compiles when running tests
 mod p2p_dist_tests {
@@ -30,7 +39,6 @@ mod p2p_dist_tests {
 
 #[cfg(test)]
 mod translate_point_tests {
-
 use super::*;
 
   #[test]
@@ -51,11 +59,7 @@ use super::*;
 
 #[cfg(test)]
 mod p2p_angle_tests {
-  use std::f64::consts::PI;
-
-use rust_comp_geo::geometry::point::point::p2p_angle;
-
-use super::*; // Import root scope
+  use super::*; // Import root scope
 
   #[test]
   fn p2p_angle_tests_per_quadrant() {
@@ -77,4 +81,50 @@ use super::*; // Import root scope
     }
   }
 
+}
+
+#[cfg(test)]
+mod points_equal_tests {
+  use super::*;
+
+  #[test]
+  fn test_points_equal() {
+    let p1: XY = XY {
+      x: 0.0,
+      y: 10.0,
+    };
+
+    let vect: Vec<(XY, bool)> = vec![
+      (XY { x: -0.0000001, y: 10.0 }, true),
+      (XY { x: 0.0, y: 10.0000000001 }, true),
+      (XY { x: 0.0000001, y: 10.000001 }, true),
+      (XY { x: 0.1, y: 10.0001 }, false),
+    ];
+
+    for (p2, expected) in vect {
+      assert_eq!(point_equals(p1)(p2), expected);
+      assert_eq!(points_equal(p1, p2, None), expected);
+    }
+  }
+}
+
+#[cfg(test)]
+mod bounding_box_from_points_tests {
+  use super::*;
+
+  #[test]
+  fn bounding_box_from_points_test() {
+    let points: Vec<XY> = vec![
+      XY { x: 5.0, y: 5.0 },
+      XY { x: 0.0, y: 0.0 },
+      XY { x: 5.0, y: 10.0 },
+      XY { x: 10.0, y: 10.0 },
+    ];
+
+    let bb: BoundingBox = bounding_box_from_points(points);
+    assert_eq!(bb.x_min, 0.0);
+    assert_eq!(bb.y_min, 0.0);
+    assert_eq!(bb.x_max, 10.0);
+    assert_eq!(bb.y_max, 10.0);
+  }
 }
