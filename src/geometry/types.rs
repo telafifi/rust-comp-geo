@@ -49,23 +49,6 @@ pub struct Vector3D {
     pub k: f64,
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, PartialEq, Debug)]
-#[serde(rename_all = "camelCase")]
-
-pub enum StrokeType {
-    Segment,
-    Arc
-}
-
-#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
-pub struct StrokeBase {
-    pub p1: XY,
-    pub p2: XY,
-    // Need to test serialization and deserialization from json
-    #[serde(rename="type")]
-    pub stroke_type: StrokeType
-}
-
 #[derive(Clone, Copy, Serialize, Deserialize, Debug)]
 #[serde(rename = "segment")]
 pub struct Segment {
