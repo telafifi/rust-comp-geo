@@ -1,5 +1,5 @@
 use crate::geometry::angle::angle::correct_angle_signs;
-use crate::geometry::types::{BoundingBox, XY};
+use crate::geometry::types::types::{BoundingBox, XY};
 use crate::utils::utils::close_equal;
 
 pub fn create_point(x: f64, y: f64) -> XY {

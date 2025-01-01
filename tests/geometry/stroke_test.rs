@@ -1,13 +1,11 @@
 use rust_comp_geo::geometry::stroke::segment::reverse_segment;
 use rust_comp_geo::geometry::stroke::arc::reverse_arc;
 use rust_comp_geo::geometry::stroke::stroke::reverse_stroke;
-use rust_comp_geo::geometry::types::{ Segment, Stroke, XY, Arc, SegmentBehavior };
+use rust_comp_geo::geometry::types::types::{ Segment, Stroke, XY, Arc, SegmentBehavior, ArcBehavior };
 use rust_comp_geo::geometry::point::point::points_equal;
 
 #[cfg(test)]
 mod segment_tests {
-
-use rust_comp_geo::geometry::types::ArcBehavior;
 
 use super::*;
 

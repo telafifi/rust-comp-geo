@@ -1,4 +1,4 @@
-use crate::geometry::types::ArcBehavior;
+use crate::geometry::types::types::ArcBehavior;
 
 pub fn reverse_arc<T: ArcBehavior>(arc: &T) -> T where T: Clone {
   // Need to add condition for half circle to deal with major.

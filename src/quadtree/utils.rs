@@ -1,5 +1,5 @@
 use crate::quadtree::types::NodeGeometry;
-use crate::geometry::types::{ Segment, XY };
+use crate::geometry::types::types::{ Segment, XY };
 
 /**
  * Offset the bounds of a node by the given amount making the node larger.

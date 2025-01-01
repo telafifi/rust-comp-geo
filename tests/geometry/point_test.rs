@@ -7,7 +7,7 @@ use rust_comp_geo::geometry::point::point::{
   point_equals, 
   translate_point
 };
-use rust_comp_geo::geometry::types::{ BoundingBox, XY };
+use rust_comp_geo::geometry::types::types::{ BoundingBox, XY };
 use rust_comp_geo::utils::utils::close_equal;
 use std::f64::consts::PI;
 

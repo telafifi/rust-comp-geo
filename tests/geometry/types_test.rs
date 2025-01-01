@@ -1,5 +1,5 @@
 use serde::{Serialize, Deserialize};
-use rust_comp_geo::geometry::types::{Arc, AnnotatedStroke, Segment, Stroke, XY};
+use rust_comp_geo::geometry::types::types::{Arc, AnnotatedStroke, Segment, Stroke, XY};
 
 #[cfg(test)]
 mod type_tests {

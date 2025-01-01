@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
 use crate::quadtree::types::{ NodeGeometry, QuadTreeObject};
-use crate::geometry::types::{Circle, XY};
+use crate::geometry::types::types::{Circle, XY};
 
 /**
  * Check if a circle intersects with the given node.

@@ -1,5 +1,5 @@
 use rust_comp_geo::{
-  geometry::types::XY, 
+  geometry::types::types::XY, 
   quadtree::{
     quadtree::{Quadtree, QuadtreeProps}, 
     quadtree_point::QuadtreePoint, 

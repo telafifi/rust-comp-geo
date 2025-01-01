@@ -1,4 +1,4 @@
-use crate::geometry::types::SegmentBehavior;
+use crate::geometry::types::types::SegmentBehavior;
 
 pub fn reverse_segment<T: SegmentBehavior>(segment: &T) -> T where T: Clone {
     let mut reversed_segment = segment.clone();

@@ -1,5 +1,5 @@
 use crate::quadtree::types::{ NodeGeometry, QuadTreeObject};
-use crate::geometry::types::XY;
+use crate::geometry::types::types::XY;
 
 pub fn point_in_node(point: &XY, node: &NodeGeometry) -> bool {
   point.x >= node.x_min && point.x <= node.x_max && point.y >= node.y_min && point.y <= node.y_max
