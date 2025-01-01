@@ -1,4 +1,4 @@
-use crate::geometry::types::types::{StrokeBehavior, StrokeType};
+use crate::geometry::types::stroke_types::{StrokeBehavior, StrokeType};
 use crate::geometry::stroke::segment::reverse_segment;
 use crate::geometry::stroke::arc::reverse_arc;
 

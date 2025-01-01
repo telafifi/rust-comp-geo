@@ -1,5 +1,6 @@
 use crate::quadtree::types::NodeGeometry;
-use crate::geometry::types::types::{ Segment, XY };
+use crate::geometry::types::types::XY;
+use crate::geometry::types::stroke_types::Segment;
 
 /**
  * Offset the bounds of a node by the given amount making the node larger.
