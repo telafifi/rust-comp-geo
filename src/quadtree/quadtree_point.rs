@@ -1,7 +1,7 @@
-use crate::quadtree::types::{ NodeGeometry, QuadTreeObject};
-use crate::geometry::types::types::XY;
+use crate::quadtree::types::QuadTreeObject;
+use crate::geometry::types::types::{BoundingBox, XY};
 
-pub fn point_in_node(point: &XY, node: &NodeGeometry) -> bool {
+pub fn point_in_node(point: &XY, node: &BoundingBox) -> bool {
   point.x >= node.x_min && point.x <= node.x_max && point.y >= node.y_min && point.y <= node.y_max
 }
 
@@ -32,7 +32,7 @@ impl<U> QuadTreeObject<U> for QuadtreePoint<U> {
     &self.data
   }
 
-  fn in_node(&self, node: &NodeGeometry) -> bool {
+  fn in_node(&self, node: &BoundingBox) -> bool {
     point_in_node(&self.point, node)
   }
 }

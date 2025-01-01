@@ -121,7 +121,7 @@ mod bounding_box_from_points_tests {
       XY { x: 10.0, y: 10.0 },
     ];
 
-    let bb: BoundingBox = bounding_box_from_points(points);
+    let bb: BoundingBox = bounding_box_from_points(&points);
     assert_eq!(bb.x_min, 0.0);
     assert_eq!(bb.y_min, 0.0);
     assert_eq!(bb.x_max, 10.0);

@@ -55,7 +55,7 @@ pub struct Circle {
     pub radius: f64,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, Default)]
 pub struct BoundingBox {
     pub x_min: f64,
     pub x_max: f64,

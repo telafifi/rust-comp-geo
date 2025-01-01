@@ -1,10 +1,10 @@
 use rust_comp_geo::{
-  geometry::types::types::XY, 
+  geometry::types::types::{BoundingBox, XY}, 
   quadtree::{
     quadtree::{Quadtree, QuadtreeProps}, 
     quadtree_point::QuadtreePoint, 
     quadtree_circle::QuadtreeCircle,
-    types::{NodeGeometry, Quadrant}
+    types::Quadrant
   }
 };
 
@@ -15,7 +15,7 @@ use super::*;
 
 fn setup() -> Quadtree<QuadtreePoint<String>, String> {
   let props: QuadtreeProps = QuadtreeProps {
-    bounds: NodeGeometry {
+    bounds: BoundingBox {
       x_min: 0.0,
       x_max: 100.0,
       y_min: 0.0,

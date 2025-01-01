@@ -1,11 +1,12 @@
 use std::marker::PhantomData;
 use std::hash::Hash;
 
+use crate::geometry::types::types::BoundingBox;
 use crate::quadtree::utils::offset_node_bounds;
-use crate::quadtree::types::{NodeGeometry, QuadTreeObject};
+use crate::quadtree::types::QuadTreeObject;
 
 pub struct QuadtreeProps {
-  pub bounds: NodeGeometry,
+  pub bounds: BoundingBox,
   pub max_objects: usize,
   pub max_levels: usize,
 }
@@ -13,7 +14,7 @@ pub struct QuadtreeProps {
 impl Default for QuadtreeProps {
   fn default() -> Self {
     QuadtreeProps {
-      bounds: NodeGeometry::default(),
+      bounds: BoundingBox::default(),
       max_objects: 10,
       max_levels: 4,
     }
@@ -21,7 +22,7 @@ impl Default for QuadtreeProps {
 }
 
 pub struct Quadtree<T, U> where T: QuadTreeObject<U> {
-  pub bounds: NodeGeometry,
+  pub bounds: BoundingBox,
   pub max_objects: usize,
   pub max_levels: usize,
   pub level: usize,
@@ -46,7 +47,7 @@ where T: QuadTreeObject<U> + Hash + Eq {
 
   pub fn split(&mut self) -> () {
     let level = self.level + 1;
-    let NodeGeometry { x_min, x_max, y_min, y_max } = self.bounds;
+    let BoundingBox { x_min, x_max, y_min, y_max } = self.bounds;
 
     let x_mid = (x_min + x_max) / 2.0;
     let y_mid = (y_min + y_max) / 2.0;
@@ -57,26 +58,26 @@ where T: QuadTreeObject<U> + Hash + Eq {
     // gaps between the quadrants due to rounding error, so
     // the inNode() implementations don't need to account for
     // rounding error gaps between the quadrants.
-    let bounds: Vec<NodeGeometry> = vec![
-      NodeGeometry {
+    let bounds: Vec<BoundingBox> = vec![
+      BoundingBox {
         x_min,
         x_max: x_mid,
         y_min,
         y_max: y_mid,
       },
-      NodeGeometry {
+      BoundingBox {
         x_min,
         x_max: x_mid,
         y_min: y_mid,
         y_max,
       },
-      NodeGeometry {
+      BoundingBox {
         x_min: x_mid,
         x_max,
         y_min: y_mid,
         y_max,
       },
-      NodeGeometry {
+      BoundingBox {
         x_min: x_mid,
         x_max,
         y_min,

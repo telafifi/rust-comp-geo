@@ -1,7 +1,7 @@
 use std::hash::{Hash, Hasher};
 
-use crate::quadtree::types::{ NodeGeometry, QuadTreeObject};
-use crate::geometry::types::types::{Circle, XY};
+use crate::quadtree::types::QuadTreeObject;
+use crate::geometry::types::types::{BoundingBox, Circle, XY};
 
 /**
  * Check if a circle intersects with the given node.
@@ -9,8 +9,8 @@ use crate::geometry::types::types::{Circle, XY};
  * It uses the rectangle-circle intersection test algorithm described in the following article:
  * https://yal.cc/rectangle-circle-intersection-test/
  */
-pub fn circle_in_node(circle: &Circle, node: &NodeGeometry) -> bool {
-  let NodeGeometry{ x_min, x_max, y_min, y_max } = *node;
+pub fn circle_in_node(circle: &Circle, node: &BoundingBox) -> bool {
+  let BoundingBox{ x_min, x_max, y_min, y_max } = *node;
 
   let clamped_x = f64::max(x_min, f64::min(circle.center.x, x_max));
   let delta_x = circle.center.x - clamped_x;
@@ -69,7 +69,7 @@ impl<U> QuadTreeObject<U> for QuadtreeCircle<U> {
     &self.data
   }
 
-  fn in_node(&self, node: &NodeGeometry) -> bool {
+  fn in_node(&self, node: &BoundingBox) -> bool {
     circle_in_node(&Circle { center: self.center, radius: self.radius }, node)
   }
 }

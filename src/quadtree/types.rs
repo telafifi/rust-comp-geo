@@ -1,20 +1,11 @@
-/**
- * Interface for geometry of a Quadtree node.
- */
-#[derive(Default, Copy, Clone)]
-pub struct NodeGeometry {
-  pub x_min: f64,
-  pub x_max: f64,
-  pub y_min: f64,
-  pub y_max: f64,
-}
+use crate::geometry::types::types::BoundingBox;
 
 /**
  * Interface for objects that can be stored in a quadtree.
  */
 pub trait QuadTreeObject<T> {
   fn get_data(&self) -> &T;
-  fn in_node(&self, node: &NodeGeometry) -> bool;
+  fn in_node(&self, node: &BoundingBox) -> bool;
 }
 
 /**

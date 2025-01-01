@@ -1,12 +1,11 @@
-use crate::quadtree::types::NodeGeometry;
-use crate::geometry::types::types::XY;
+use crate::geometry::types::types::{BoundingBox, XY};
 use crate::geometry::types::stroke_types::Segment;
 
 /**
  * Offset the bounds of a node by the given amount making the node larger.
  */
-pub fn offset_node_bounds(node: &NodeGeometry, distance: f64)-> NodeGeometry {
-  NodeGeometry {
+pub fn offset_node_bounds(node: &BoundingBox, distance: f64)-> BoundingBox {
+  BoundingBox {
     x_min: node.x_min - distance,
     x_max: node.x_max + distance,
     y_min: node.y_min - distance,
@@ -17,7 +16,7 @@ pub fn offset_node_bounds(node: &NodeGeometry, distance: f64)-> NodeGeometry {
 /**
  * Returns the four corner points of a node.
  */
-pub fn get_node_points(node: &NodeGeometry) -> Vec<XY> {
+pub fn get_node_points(node: &BoundingBox) -> Vec<XY> {
   vec![
     XY { x: node.x_min, y: node.y_min },
     XY { x: node.x_min, y: node.y_max },

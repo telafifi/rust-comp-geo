@@ -54,7 +54,7 @@ pub fn point_equals(p1: XY) -> impl Fn(XY) -> bool {
 /**
  * Create a bounding box from a list of points.
  */
-pub fn bounding_box_from_points(points: Vec<XY>) -> BoundingBox {
+pub fn bounding_box_from_points(points: &Vec<XY>) -> BoundingBox {
   let mut x_min = f64::INFINITY;
   let mut y_min = f64::INFINITY;
   let mut x_max = f64::NEG_INFINITY;
