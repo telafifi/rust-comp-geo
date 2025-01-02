@@ -30,7 +30,7 @@ mod unscramble_path_tests {
     ];
 
     let unscrambled = unscramble_path(path, None);
-    println!("{:?}", unscrambled);
+    // println!("{:?}", unscrambled);
     assert_eq!(unscrambled.len(), 2);
   }
 }
