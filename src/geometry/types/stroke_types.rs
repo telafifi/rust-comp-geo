@@ -29,7 +29,7 @@ pub trait AnnotatedStrokeBehavior<T> {
   fn set_data(&mut self, data: T);
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Clone, Copy, Serialize, Deserialize, Debug, Hash, Eq, PartialEq)]
 #[serde(rename = "segment")]
 pub struct Segment {
   pub p1: XY,
@@ -54,7 +54,7 @@ impl SegmentBehavior for Segment {
   }
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Clone, Copy, Serialize, Deserialize, Debug, Hash, Eq, PartialEq)]
 #[serde(rename = "arc")]
 pub struct Arc {
   pub p1: XY,
@@ -100,7 +100,7 @@ impl ArcBehavior for Arc {
   }
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Clone, Copy, Serialize, Deserialize, Debug, Hash, Eq, PartialEq)]
 #[serde(tag = "type")]
 pub enum Stroke {
   #[serde(rename = "segment")]
@@ -178,7 +178,7 @@ impl StrokeBehavior for Stroke {
   }
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Debug)]
+#[derive(Clone, Copy, Serialize, Deserialize, Debug, Hash, Eq, PartialEq)]
 pub struct AnnotatedStroke<T> {
   #[serde(flatten)]
   pub stroke: Stroke,

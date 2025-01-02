@@ -1,5 +1,4 @@
 use crate::geometry::types::stroke_types::StrokeBehavior;
-use std::borrow::BorrowMut;
 use std::hash::Hash;
 use crate::geometry::stroke::stroke::reverse_stroke;
 use crate::geometry::point::point::{bounding_box_from_points, points_equal};
@@ -23,7 +22,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
     i: usize,
   }
 
-  let reverse = opts.unwrap().reverse.unwrap_or(|stroke| reverse_stroke(&stroke));
+  let reverse = reverse_stroke;
   // let tolerance = opts.unwrap().tolerance.unwrap_or(0.001);
   let tolerance = 0.001;
 
@@ -41,23 +40,22 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
     QuadtreePoint::new(stroke.get_p2(), IndexedData { stroke: stroke.clone(), start: false, used: false, i }),
   ]).collect::<Vec<[QuadtreePoint<IndexedData<T>>; 2]>>();
 
-  points.iter().for_each(|point| {
-    index.insert(&point[0]);
-    index.insert(&point[1]);
+  points.iter().for_each(|[start_point, end_point]| {
+    index.insert(start_point);
+    index.insert(end_point);
   });
 
   let mut result: Vec<Vec<T>> = Vec::new();
 
-  points.iter().for_each(|[start_point, end_point]| {
-    // If this point has already been used in a path, then skip it.
-    if (!start_point.data.used) {
-      start_point.data.used = true;
-      end_point.data.used = true;
+  for i in 0..points.len() {
+    if !points[i][0].data.used {
+      points[i][0].data.used = true;
+      points[i][1].data.used = true;
 
       // First find all the connections to this point
       // in the forward direction along the path.
-      let mut forward_path: Vec<T> = vec![start_point.data.stroke];
-      let mut p2 = end_point;
+      let mut forward_path: Vec<T> = vec![points[i][0].data.stroke.clone()];
+      let mut p2 = points[i][1].clone();
 
       loop {
         let candidates = index.search(&p2, tolerance);
@@ -68,17 +66,27 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
 
         match match_found {
           Some(matched_point) => {
-            let mut match_point = points[match_found.unwrap().data.i];
-            if match_found.unwrap().data.start {
-              forward_path.push(match_found.unwrap().data.stroke);
-              p2 = &match_point[1];
+            let point_idx = matched_point.data.i;
+            let next_point = if matched_point.data.start {
+                forward_path.push(matched_point.data.stroke.clone());
+                QuadtreePoint::new(
+                  points[point_idx][1].point,
+                  points[point_idx][1].data.clone()  // Keep the existing data
+                )
             } else {
-              forward_path.push(reverse(match_found.unwrap().data.stroke));
-              p2 = &match_point[0];
-            }
+                forward_path.push(reverse(&matched_point.data.stroke.clone()));
+                QuadtreePoint::new(
+                  points[point_idx][0].point,
+                  points[point_idx][0].data.clone()  // Keep the existing data
+                )
+            };
 
-            match_point[0].data.used = true;
-            match_point[1].data.used = true;
+            points[point_idx][0].data.used = true;
+            points[point_idx][1].data.used = true;
+
+            // Update p2 with a new QuadtreePoint using the stored point data
+            p2 = next_point;
+            // break;
           },
           None => break,
         }
@@ -87,7 +95,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
       // Next find all the connections to this point in the backwards
       // direction along the path.
       let mut backward_path: Vec<T> = vec![];
-      let mut p1 = start_point;
+      let mut p1 = points[i][0].clone();
 
       loop {
         let candidates = index.search(&p1, tolerance);
@@ -98,17 +106,27 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
 
         match match_found {
           Some(matched_point) => {
-            let mut match_point = points[match_found.unwrap().data.i];
-            if match_found.unwrap().data.start {
-              backward_path.push(reverse(match_found.unwrap().data.stroke));
-              p1 = &match_point[1];
-            } else {
-              backward_path.push(match_found.unwrap().data.stroke);
-              p1 = &match_point[0];
-            }
+            let point_idx = matched_point.data.i;
 
-            match_point[0].data.used = true;
-            match_point[1].data.used = true;
+            let next_point = if matched_point.data.start {
+              backward_path.push(reverse(&matched_point.data.stroke.clone()));
+              QuadtreePoint::new(
+                points[point_idx][1].point,
+                points[point_idx][1].data.clone()  // Keep the existing data
+              )
+            } else {
+              backward_path.push(matched_point.data.stroke.clone());
+              QuadtreePoint::new(
+                points[point_idx][0].point,
+                points[point_idx][0].data.clone()  // Keep the existing data
+              )
+            };
+
+            points[point_idx][0].data.used = true;
+            points[point_idx][1].data.used = true;
+
+            p1 = next_point;
+            // break;
           },
           None => break,
         }
@@ -116,7 +134,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
 
       result.push(backward_path.iter().rev().chain(forward_path.iter()).cloned().collect());
     }
-  });
+  }
 
   return result;
 }
