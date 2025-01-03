@@ -69,6 +69,8 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
         let match_found = candidates.iter().find(|candidate| {
           let index = candidate.data.i;
           let sub_index = if candidate.data.start { 0 } else { 1 };
+          // Need to use the original point data to compare, as that is the owner that is having data mutated
+          // and we need to ensure that the same point is not used twice.
           let candidate_point = &points[index][sub_index];
           !candidate_point.data.used && points_equal(p2.point, candidate.point, Some(tolerance))
         });
