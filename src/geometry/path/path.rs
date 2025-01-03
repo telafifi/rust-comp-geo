@@ -7,7 +7,7 @@ use crate::quadtree::{quadtree::Quadtree, quadtree_point::QuadtreePoint};
 
 pub struct UnscramblePathOpts<T: StrokeBehavior + Hash + Eq> {
     pub tolerance: Option<f64>,
-    pub reverse: Option<fn(T) -> T>,
+    pub reverse: Option<fn(&T) -> T>,
 }
 
 pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
@@ -22,9 +22,15 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
     i: usize,
   }
 
-  let reverse = reverse_stroke;
-  // let tolerance = opts.unwrap().tolerance.unwrap_or(0.001);
-  let tolerance = 0.001;
+  // Default values
+  let reverse = match &opts {
+    Some(opt) => opt.reverse.unwrap_or(reverse_stroke),
+    None => reverse_stroke
+  };
+  let tolerance = match &opts {
+    Some(opt) => opt.tolerance.unwrap_or(0.001),
+    None => 0.001
+  };
 
   let stroke_extremes = strokes.iter().map(|stroke| [stroke.get_p1(), stroke.get_p2()]).flatten().collect::<Vec<_>>();
   let bounds = bounding_box_from_points(&stroke_extremes);
@@ -70,7 +76,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
         match match_found {
           Some(matched_point) => {
             let point_idx = matched_point.data.i;
-            let next_point = if matched_point.data.start {
+            let next_sub_index = if matched_point.data.start {
                 forward_path.push(matched_point.data.stroke.clone());
                 1
             } else {
@@ -82,8 +88,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
             points[point_idx][1].data.used = true;
 
             // Update p2 with a new QuadtreePoint using the stored point data
-            p2 = &points[point_idx][next_point];
-            // break;
+            p2 = &points[point_idx][next_sub_index];
           },
           None => break,
         }
@@ -108,7 +113,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
           Some(matched_point) => {
             let point_idx = matched_point.data.i;
 
-            let next_point = if matched_point.data.start {
+            let next_sub_index = if matched_point.data.start {
               backward_path.push(reverse(&matched_point.data.stroke.clone()));
               1
             } else {
@@ -119,7 +124,7 @@ pub fn unscramble_path<T: StrokeBehavior + Clone + Hash + Eq>(
             points[point_idx][0].data.used = true;
             points[point_idx][1].data.used = true;
 
-            p1 = &points[point_idx][next_point];
+            p1 = &points[point_idx][next_sub_index];
           },
           None => break,
         }
