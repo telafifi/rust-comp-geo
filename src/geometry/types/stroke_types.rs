@@ -22,6 +22,7 @@ pub trait ArcBehavior: SegmentBehavior {
 
 pub trait StrokeBehavior: SegmentBehavior + ArcBehavior {
   fn get_type(&self) -> StrokeType;
+  fn get_stroke(&self) -> Stroke;
 }
 
 pub trait AnnotatedStrokeBehavior<T> {
@@ -176,6 +177,9 @@ impl StrokeBehavior for Stroke {
           Stroke::Arc(_) => StrokeType::Arc,
       }
   }
+  fn get_stroke(&self) -> Stroke {
+        self.clone()
+  }
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize, Debug, Hash, Eq, PartialEq)]
@@ -225,4 +229,7 @@ impl<T> StrokeBehavior for AnnotatedStroke<T> {
   fn get_type(&self) -> StrokeType {
       self.stroke.get_type()
   }
+    fn get_stroke(&self) -> Stroke {
+        self.stroke.clone()
+    }
 }
